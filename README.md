@@ -9,3 +9,10 @@ now in order to fix this go up to the config copy the name of the event and put 
 
 https://discord.gg/z6qGGtbcr4 if u have any questions or need anything u can ask i our discord server just dm me 
 also make sure u change the webhooks else ill be spammed and i dont want that pl3ase
+
+
+anti internal has been removed due to high ms usage but ill add it again soon after i optmize it
+which is pretty hard beacuse i use mouse pos and movments to detect ill upload the code soon...
+https://www.youtube.com/watch?v=xgFFfGNQehk
+
+https://youtu.be/BfSHgVtE3eE
