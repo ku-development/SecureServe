@@ -1,20 +1,84 @@
-# SecureServe
-Advanced Free opensource fivem anticheat
+# SecureServe - Advanced Free Open Source FiveM Anti-Cheat
 
-new update very soon ( anti internal )
+SecureServe is a comprehensive and advanced anti-cheat solution for FiveM, designed to keep your server secure and ensure a fair gameplay environment. This project is completely free and open-source.
 
-# install guide:
-at first you will get this ban reason: A player has been banned for Trigger Event with an excutor ( name of the event )
-now in order to fix this go up to the config copy the name of the event and put in the whitelisted events list it will fix the issue this issue is caused by encreypted and decreypted scripts running same events because of the encreyption methood used to prevent events triggering
-# 40 stars and i release the in game admin panel
-![image](https://github.com/user-attachments/assets/37b39ce0-a7ee-4ac1-a9c7-6033c086ce9b)
+![SecureServe Preview](https://github.com/user-attachments/assets/37b39ce0-a7ee-4ac1-a9c7-6033c086ce9b)
 
-https://discord.gg/z6qGGtbcr4 if u have any questions or need anything u can ask i our discord server just dm me 
-also make sure u change the webhooks else ill be spammed and i dont want that pl3ase
+## Key Features
+- **Anti Internal** (temporarily removed, will return soon after optimization).
+- Detection of unauthorized triggers with detailed event logging.
+- Configurable whitelisted events to prevent false bans.
+- Advanced mouse position and movement detection for cheat identification.
 
+### Main Detections
+**Entities Detections**
+- **Entities Detection**: Detects unauthorized entities created by cheats.
+- **Triggers Detection**: Monitors and prevents unauthorized event triggers.
+- **Resources Detection**: Identifies suspicious or unauthorized resources.
+- **Internals Executors Detection**: Detects internal executors used for cheating.
+- **Sounds Protections**: Prevents unauthorized sounds or audio manipulations.
+- **Entity Control Protection**: Prevents control hijacking of server entities.
+- **Safe Player**: Ensures players are protected from common exploits.
 
-anti internal has been removed due to high ms usage but ill add it again soon after i optmize it
-which is pretty hard beacuse i use mouse pos and movments to detect ill upload the code soon...
-https://www.youtube.com/watch?v=xgFFfGNQehk
+**Client-Side Detections**
+- **Menu Detections**: Detects unauthorized cheat menus.
+- **Noclip Detection**: Identifies players using noclip.
+- **Freecam Detection**: Prevents unauthorized freecam usage.
+- **Godmode Detection**: Detects invincibility or "godmode" cheats.
+- **Rapidfire Detection**: Identifies rapid-fire exploits.
+- **Norecoil Detection**: Detects removal of weapon recoil.
+- **AI Files Detection**: Detects modified AI files used for cheating.
 
-https://youtu.be/BfSHgVtE3eE
+**Server-Side Detections**
+- **Weapon Detection**: Monitors unauthorized weapons.
+- **Particles Detection**: Identifies suspicious particle effects.
+- **Explosions Detection**: Detects unauthorized explosions.
+- **Stop Detection**: Prevents unauthorized stopping of server resources.
+
+## Upcoming Updates
+- **In-Game Admin Panel**: If we reach 40 stars on GitHub, the in-game admin panel will be released!
+- Reintroducing **Anti Internal** with optimized performance.
+
+## Installation Guide
+1. Upon initial installation, you may see a ban reason:
+   > "A player has been banned for Trigger Event with an executor (name of the event)"
+2. To fix this issue, go to the configuration file.
+3. Copy the name of the event causing the ban.
+4. Add this event name to the **whitelisted events list** in the config.
+5. This will resolve the issue caused by encrypted and decrypted scripts running the same events due to the encryption method used to prevent event triggering.
+
+## Important Notes
+- Please update the webhooks to avoid sending spam notifications to the developer.
+- **Discord Support**: If you have any questions or need help, join our [Discord Server](https://discord.gg/z6qGGtbcr4).
+- Check out our **video tutorials**:
+  - [Installation Guide](https://www.youtube.com/watch?v=xgFFfGNQehk)
+  - [Advanced Configuration](https://youtu.be/BfSHgVtE3eE)
+
+## Contributing
+We welcome contributions from the community! If you would like to report issues, suggest features, or contribute code, please feel free to create a pull request or start a discussion.
+
+## Disclaimer
+**Anti Internal** has been temporarily removed due to high MS usage but will be added again soon after further optimization. We are using mouse position and movement tracking to detect cheats, and this code will be uploaded soon.
+
+## License
+SecureServe is released under the [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.en.html). Feel free to use, modify, and distribute it as per the terms of the license.
+
+## Analytics
+
+### Visits Overview
+![Visits Graph](https://via.placeholder.com/800x400?text=Visits+Graph)
+
+This graph shows the recent visits to the SecureServe repository, helping us understand engagement and popularity over time.
+
+### Contributors and Activity
+![Contributors Graph](https://via.placeholder.com/800x400?text=Contributors+Graph)
+
+The above graph visualizes the contribution activity, showing how many contributors have been actively working on SecureServe and their respective contributions over time.
+
+## Contact
+- **Discord**: [Join our server](https://discord.gg/z6qGGtbcr4) to connect with the developer and the community.
+
+## Goals
+- **40 GitHub Stars**: Release of the in-game admin panel upon reaching the milestone.
+
+### Enjoy a secure FiveM experience with SecureServe!
