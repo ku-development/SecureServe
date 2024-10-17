@@ -38,7 +38,6 @@ SecureServe is a comprehensive and advanced anti-cheat solution for FiveM, desig
 ## Upcoming Updates
 - **In-Game Admin Panel**: If we reach 40 stars on GitHub, the in-game admin panel will be released!
 - Reintroducing **Anti Internal** with optimized performance.
-- **SecureServe Events scrambler** since the project is open source now people know the anticheats events, so event scrambler is required
   
 ## Installation Guide
 1. Upon initial installation, you may see a ban reason:
