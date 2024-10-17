@@ -2,6 +2,14 @@
 
 SecureServe is a comprehensive and advanced anti-cheat solution for FiveM, designed to keep your server secure and ensure a fair gameplay environment. This project is completely free and open-source.
 
+## Read Before Use!!!
+1. Upon initial installation, you may see a ban reason:
+   > "A player has been banned for Trigger Event with an executor (name of the event)"
+2. To fix this issue, go to the configuration file.
+3. Copy the name of the event causing the ban.
+4. Add this event name to the **whitelisted events list** in the config.
+5. This will resolve the issue caused by encrypted and decrypted scripts running the same events due to the encryption method used to prevent event triggering.
+   
 ![SecureServe Preview](https://github.com/user-attachments/assets/37b39ce0-a7ee-4ac1-a9c7-6033c086ce9b)
 
 ## Key Features
