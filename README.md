@@ -63,18 +63,6 @@ We welcome contributions from the community! If you would like to report issues,
 ## License
 SecureServe is released under the [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.en.html). Feel free to use, modify, and distribute it as per the terms of the license.
 
-## Analytics
-
-### Visits Overview
-![Visits Graph](https://via.placeholder.com/800x400?text=Visits+Graph)
-
-This graph shows the recent visits to the SecureServe repository, helping us understand engagement and popularity over time.
-
-### Contributors and Activity
-![Contributors Graph](https://via.placeholder.com/800x400?text=Contributors+Graph)
-
-The above graph visualizes the contribution activity, showing how many contributors have been actively working on SecureServe and their respective contributions over time.
-
 ## Contact
 - **Discord**: [Join our server](https://discord.gg/z6qGGtbcr4) to connect with the developer and the community.
 
