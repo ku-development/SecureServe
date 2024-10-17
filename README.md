@@ -48,12 +48,14 @@ SecureServe is a comprehensive and advanced anti-cheat solution for FiveM, desig
 - Reintroducing **Anti Internal** with optimized performance.
   
 ## Installation Guide
-1. Upon initial installation, you may see a ban reason:
+1. Setup logs webhooks!
+2. Upon initial installation, you may see a ban reason:
    > "A player has been banned for Trigger Event with an executor (name of the event)"
-2. To fix this issue, go to the configuration file.
-3. Copy the name of the event causing the ban.
-4. Add this event name to the **whitelisted events list** in the config.
-5. This will resolve the issue caused by encrypted and decrypted scripts running the same events due to the encryption method used to prevent event triggering.
+3. To fix this issue, go to the configuration file.
+4. Copy the name of the event causing the ban.
+5. Add this event name to the **whitelisted events list** in the config.
+6. This will resolve the issue caused by encrypted and decrypted scripts running the same events due to the encryption method used to prevent event triggering.
+7. Change explosions max and min to fit your server make sure you arent just whitelisting staff
 
 ## Important Notes
 - Please update the webhooks to avoid sending spam notifications to the developer.
