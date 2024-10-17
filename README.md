@@ -1,7 +1,7 @@
 # SecureServe
 Advanced Free opensource fivem anticheat
 
-**new update very soon ( anti internal ) **
+new update very soon ( anti internal )
 
 # install guide:
 at first you will get this ban reason: A player has been banned for Trigger Event with an excutor ( name of the event )
