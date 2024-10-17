@@ -64,6 +64,8 @@ RegisterNetEvent('requestConfig', function()
     TriggerClientEvent('receiveConfig', src, SecureServe)
 end)
 
+GlobalState.SecureServe_events = math.random(1, 99999);
+
 local function setTimeState()
     GlobalState.SecureServe = os.time()
 end
@@ -825,7 +827,7 @@ end)
 
 
 
-RegisterNetEvent("SecureServe:Server:Methods:PunishPlayer", function(player, reason, webhook, time)
+RegisterNetEvent("SecureServe:Server:Methods:PunishPlayer" .. GlobalState.SecureServe_events, function(player, reason, webhook, time)
     if not player then player = source end
     punish_player(player, reason, webhook, time)
 end)
