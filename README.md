@@ -2,6 +2,13 @@
 
 SecureServe is a comprehensive and advanced anti-cheat solution for FiveM, designed to keep your server secure and ensure a fair gameplay environment. This project is completely free and open-source.
 
+## Developer Branch
+In here you will see the code organized and decompiled it will still works but not recommended to run at this sate.
+
+running in this state will cause security problems and will add breaches to the anticheat security.
+
+it's full developer mode means bans are only logged and prints are added for every system.
+
 ![SecureServe Preview](https://github.com/user-attachments/assets/37b39ce0-a7ee-4ac1-a9c7-6033c086ce9b)
 
 ## Key Features
