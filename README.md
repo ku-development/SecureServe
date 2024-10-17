@@ -9,8 +9,6 @@ SecureServe is a comprehensive and advanced anti-cheat solution for FiveM, desig
 3. Copy the name of the event causing the ban.
 4. Add this event name to the **whitelisted events list** in the config.
 5. This will resolve the issue caused by encrypted and decrypted scripts running the same events due to the encryption method used to prevent event triggering.
-   
-![SecureServe Preview](https://github.com/user-attachments/assets/37b39ce0-a7ee-4ac1-a9c7-6033c086ce9b)
 
 ## Key Features
 - **Anti Internal** (temporarily removed, will return soon after optimization).
@@ -42,6 +40,15 @@ SecureServe is a comprehensive and advanced anti-cheat solution for FiveM, desig
 - **Particles Detection**: Identifies suspicious particle effects.
 - **Explosions Detection**: Detects unauthorized explosions.
 - **Stop Detection**: Prevents unauthorized stopping of server resources.
+
+## Preview: 
+![SecureServe Preview](https://github.com/user-attachments/assets/37b39ce0-a7ee-4ac1-a9c7-6033c086ce9b)
+![image](https://github.com/user-attachments/assets/6d381556-3273-4b45-b2c6-fd1e07c836b9)
+![image](https://github.com/user-attachments/assets/f7f51ae5-0229-4261-a91f-525cd64afd6d)
+![image](https://github.com/user-attachments/assets/7ff2e07e-5f4c-4caa-b308-fedb87e44aa3)
+![image](https://github.com/user-attachments/assets/7a73d5ec-bd6f-441e-9761-7f4734d8c471)
+![image](https://github.com/user-attachments/assets/14964ca5-85eb-4df1-8aa1-b8b000790d8c)
+![image](https://github.com/user-attachments/assets/788300fa-0c1b-4361-bf84-c0d066af9cba)
 
 ## Upcoming Updates
 - **In-Game Admin Panel**: If we reach 40 stars on GitHub, the in-game admin panel will be released!
