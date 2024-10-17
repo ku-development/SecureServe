@@ -50,9 +50,9 @@ SecureServe is a comprehensive and advanced anti-cheat solution for FiveM, desig
 ## Important Notes
 - Please update the webhooks to avoid sending spam notifications to the developer.
 - **Discord Support**: If you have any questions or need help, join our [Discord Server](https://discord.gg/z6qGGtbcr4).
-- Check out our **video tutorials**:
-  - [Installation Guide](https://www.youtube.com/watch?v=xgFFfGNQehk)
-  - [Advanced Configuration](https://youtu.be/BfSHgVtE3eE)
+- Check out our **video previews**:
+  - [First Perivew](https://www.youtube.com/watch?v=xgFFfGNQehk)
+  - [Second Perview](https://youtu.be/BfSHgVtE3eE)
 
 ## Contributing
 We welcome contributions from the community! If you would like to report issues, suggest features, or contribute code, please feel free to create a pull request or start a discussion.
