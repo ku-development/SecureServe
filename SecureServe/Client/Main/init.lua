@@ -1,4 +1,102 @@
---> [Init] <--
+function LPH_JIT_MAX(func)
+    return function(...)
+        return func(...)
+    end
+end
+function LPH_NO_VIRTUALIZE(func)
+    return function(...)
+        return func(...)
+    end
+end
+
+local PlayerCache = {}
+local UpdateInterval = 5000 -- 5 seconds, adjust as needed
+
+code = GlobalState.SecureServe_events;
+
+-- Function to update cache data for a player
+local function UpdatePlayerCache(playerId)
+    if not PlayerCache[playerId] then
+        PlayerCache[playerId] = {}
+    end
+    
+    local cache = PlayerCache[playerId]
+    local ped = GetPlayerPed(playerId)
+    
+    -- Player identifiers
+    cache.playerId = playerId
+    cache.serverId = GetPlayerServerId(playerId)
+    cache.ped = ped
+    cache.pedId = PedToNet(ped)
+    
+    -- Frequently updated data
+    cache.position = GetEntityCoords(ped)
+    cache.health = GetEntityHealth(ped)
+    cache.armor = GetPedArmour(ped)
+    cache.currentWeapon = GetSelectedPedWeapon(ped)
+end
+
+-- Function to get cached player data
+function GetCachedPlayerData(playerId)
+    return PlayerCache[playerId] or {}
+end
+
+-- Function to remove player from cache (call this when a player disconnects)
+function RemovePlayerFromCache(playerId)
+    PlayerCache[playerId] = nil
+end
+
+-- Staggered update function to spread processing over time
+local function StaggeredUpdate()
+    local playerList = GetPlayers()
+    local playerCount = #playerList
+    local updateInterval = math.max(50, math.floor(UpdateInterval / playerCount))
+    
+    for i, playerId in ipairs(playerList) do
+        SetTimeout(i * updateInterval, function()
+            UpdatePlayerCache(playerId)
+        end)
+    end
+end
+
+-- Start the cache update loop
+CreateThread(function()
+    while true do
+        StaggeredUpdate()
+        Wait(UpdateInterval)
+    end
+end)
+function CheckPlayer(playerId)
+    local data = GetCachedPlayerData(playerId)
+    -- Your anticheat logic here, using 'data'
+    -- e.g., if data.pedId ~= PedToNet(GetPlayerPed(playerId)) then -- potential ped change
+end
+AddEventHandler('playerDropped', function(reason)
+    local playerId = source
+    RemovePlayerFromCache(playerId)
+end)
+
+RegisterNetEvent('receiveConfig', function(config)
+    SecureServe = config
+end)
+
+
+Citizen.CreateThread(function()
+    -- TriggerServerEvent("requestWhitelist")
+    TriggerServerEvent('requestConfig')
+end)
+
+while not SecureServe do
+    -- TriggerServerEvent("requestWhitelist")
+    TriggerServerEvent('requestConfig')
+    Wait(10)
+end
+
+Wait(1000)
+
+
+--> [Protections] <--
+local events = nil
 ProtectionCount = {}
 
 
@@ -309,7 +407,7 @@ for k,v in pairs(SecureServe.Protection.Simple) do
         Anti_Play_Sound_webhook = webhook
         Anti_Play_Sound_enabled = enabled
     end
-            
+    
     if not ProtectionCount["SecureServe.Protection.Simple"] then ProtectionCount["SecureServe.Protection.Simple"] = 0 end
     ProtectionCount["SecureServe.Protection.Simple"] = ProtectionCount["SecureServe.Protection.Simple"] + 1
 end
@@ -349,6 +447,7 @@ for k,v in pairs(SecureServe.Protection.BlacklistedAnimDicts) do
     if not ProtectionCount["SecureServe.Protection.BlacklistedAnimDicts"] then ProtectionCount["SecureServe.Protection.BlacklistedAnimDicts"] = 0 end
     ProtectionCount["SecureServe.Protection.BlacklistedAnimDicts"] = ProtectionCount["SecureServe.Protection.BlacklistedAnimDicts"] + 1
 end
+
 
 for k,v in pairs(SecureServe.Protection.BlacklistedExplosions) do
     if v.webhook == "" then
@@ -400,225 +499,69 @@ end
 
 
 
-local timeout = 0
-local ac_name = GetCurrentResourceName()
-local user_data = {
-    DiscordID = "N/A",
-    expire = "N/A",
-    date = "N/A",
-    is_expired = true
-}
+--> [Init] <--
+AddEventHandler('playerSpawned', LPH_NO_VIRTUALIZE(function()
+    Citizen.CreateThread(function()
+        -- TriggerServerCallback {
+        --     eventName = 'SecureServe:Server_Callbacks:Protections:GetConfig',
+        --     args = {},
+        --     callback = function(result)
+        --         SecureServe = result
+        --     end
+        -- }
+        
+        -- while SecureServe == nil do
+        --     Wait(0)
+        -- end
+        -- SecureServe = SecureServe
+    
+        --> [Inits] <--
+        -- initialize_protections_internal()
+        initialize_protections_noclip()
+        initialize_protections_entity_security()
+        initialize_protections_resources()
+        initialize_protections_no_recoil()
+        initialize_protections_weapon_pickup()
+        initialize_protections_invisible()
+        initialize_ocr()
+        initialize_protections_god_mode()
+        initialize_protections_state_bag_overflow()
+        initialize_protections_spoof_shot()
+        initialize_protections_speed_hack()
+        initialize_protections_spectate()
+        initialize_protections_no_reload()
+        initialize_protections_AI()
+        -- initialize_protections_rapid_fire()
+        initialize_protections_no_ragdoll()
+        initialize_protections_player_blips()
+        initialize_protections_magic_bullet()
+        initialize_protections_visions()
+        initialize_protections_infinite_ammo()
+        initialize_protections_bigger_hitbox()
+        initialize_protections_explosive_bullets()
+        initialize_protections_afk_injection()
+        initialize_protections_aim_assist()
 
-RegisterServerCallback {
-    eventName = 'SecureServe:Server_Callbacks:Protections:GetConfig',
-    eventCallback = function(source)
-        return SecureServe
-    end
-}
+        --> [Blacklists] <--
+        initialize_blacklists_commands()
+        initialize_blacklists_sprites()
+        initialize_blacklists_weapon()
+
+        Citizen.CreateThread(function()
+            while true do
+                Citizen.Wait(0) -- Run every frame
+                local playerPed = PlayerPedId()
+                SetEntityProofs(playerPed, false, false, true, false, false, false, false, false)
+            end
+        end)
+    end)
+end))
+
 
 Citizen.CreateThread(function()
-    Citizen.Wait(1000)
-    print(
-[[^5
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&X+;x&&X+;x$&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&$;;x$&X+++++X$X;:+$&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&$+:;$&$x+xx++xxxxx;+$&X::+$&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&X+;+X&&$$$&&&&&&&&$Xxxxxx++x$$X+;+X&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&x::+XX$&XX&&&&&Xx:;$&&&&++x$&&$Xx:+X++X+:;X&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&$x::+xxx$$X+$&&x:....:$&&$;X&&X:.....;+Xx;+Xx;xx+:;x$&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&X+::+;;xX$XxxX&&&&$:.....x&&&x...;&&&x.......;XXX+;+XXx++x+;;x$&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&X::+x;:x&&$;;$&&&&&&&$:....;&&&&x......+&&&;......:$XXXX$x.;X&+.;XX;.:x&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&x:XXX$$x++X&&&&&&&&&&&:....x&&&&;.........x&&$:.....;&&&&&&&&$x;+x$$XX$x:X&&&&&&&&&&&&&
-&&&&&&&&&&&&&+;X;$X+$$$$$$&&&&&&&&:....+x;&&:..........++X&&;.....x&&&&&&&&&&&$$+$$XX;;&&&&&&&&&&&&&
-&&&&&&&&&&&&&++x;&x+$$$$$$&&&&&&&x......+&:+&;.......:$x+&&x......:$&&&&&&&&&&&&+X$XX;:&&&&&&&&&&&&&
-&&&&&&&&&&&&&++;+&+x$$$$$$&&&&&&&;.......:$x:$X.....;$;x&$:........x&&&&&&&&&&$$xx$XX;:&&&&&&&&&&&&&
-&&&&&&&&&&&&&++;;&+x$$$$$$&&&&&&x..........X&;x$...X$;$&+..........:$&&&&&&&&&$$Xx$Xx;:&&&&&&&&&&&&&
-&&&&&&&&&&&&&;+;;&+x$X$$$$&&&&&&:..:X:......+&x:$$$+;&X.......+X....x&&&&&&&&&$$X+$Xx;:&&&&&&&&&&&&&
-&&&&&&&&&&&&&;;:;&;xXx$$$$&&&&&x....X&x.......x$:;:X$:.....:x&x......&&&&&&&&&$XX+$Xx;:$&&&&&&&&&&&&
-&&&&&&&&&&&&&;;:;&;xXx$$$$&&&&&......$&&;......:$$X:......x&&:.......+&&&&&&&&$XX+$XX+:$&&&&&&&&&&&&
-&&&&&&&&&&&&&;;:;&;xX+Xx$$$&&&+.......;&&$:.............+&&X:.....;...$&&&&&&&XXX+$$X+:$&&&&&&&&&&&&
-&&&&&&&&&&&&&;;:;&;xX+X+$$$&&$:.::.....:X&&x..........+&&&+......:+...x&&&&&&&x$X+$$X+:$&&&&&&&&&&&&
-&&&&&&&&&&&&&;;:;&+xX;Xxx$$&&x..+$.......;&&&;......;&&&$;......;;X+..;$&&&&&&+$X+$$X+:$&&&&&&&&&&&&
-&&&&&&&&&&&&&;;;;$+xX+xX+$$&$;..+&&;.......X&&$:..:$&&&X.......;x&&X:..x&&&&&$+&X+$$$+:$&&&&&&&&&&&&
-&&&&&&&&&&&&&;;;;$x+Xx+$;X$&X...X&&&x.......;&&&X+&&&&;.......xx&&&&:..;&&&&&X+&Xx$$$+:$&&&&&&&&&&&&
-&&&&&&&&&&&&&+:;;$x;Xx;X++$&+..:&&&&&$:.......X&&&&&X.......;+&&&&&&+...X&&&&xx&xX$$$+:$&&&&&&&&&&&&
-&&&&&&&&&&&&&X:+:XX+;X+;X;X$:.:+&&&&&&&+.......+&&&x.......;x&&&&&&&x::.;&&&&+$$+$$$$;:&&&&&&&&&&&&&
-&&&&&&&&&&&&&&:+;;XXx;X;;X;$$$&&&&&&&&&&$.......$&&:.....:;&&&&&&&&$x&&&&&&&Xx$;$$&+x;;&&&&&&&&&&&&&
-&&&&&&&&&&&&&&X:+:+XXx;x;+X;X$$$$&&&&$+$&&x.....&&&:....:X&&&&&&&&$;X&&&&$XX+Xx&&&X:X:X&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&+:x:xXXx;X;xX;X$$$$$$$$X+X&&$:....+:....:$&$&&&&&&$;+$&$$$x$$Xx&&&$:X++&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&$;:x:XXXX:x;xX+X$$$$$$$$x+;&&&X........X&$x&&&&&&X;+$&&x$:&&X+&&&$;+X;$$$&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&$:;;;XXXX+x;+x+$$$$$$$$X+;+$&&&+....;&&xX&&&&&&X;+$&&+X+&&X+&&&&++x:$$$$&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&$:+:;XXXx+X;+x;X$$$XXXXx;;+X&&&$::$&xx&&&&&&&$;x&&&+xxX&X+$$$$;;+:$$$$$&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&$X:x;;XXXX;x++x+XXXXXXXx+;;+xX&&&&&+$&&&&&&&$;X&&&++Xx&$+$$$$;:x:$$$$$&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&$$X:;;;XXXX+x;+x+xXXXXxxx;;;+xxX$x+&&&&&&&&X+&&&&x+x;$$;$$$X;;+;$&&&$&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&$$$:;:;XXXX+X+;+++xXxxxx+;;;++++X&&&&&&&&$X&&&&x;x;$Xx$$XX:;;:$&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&$$$;+;;xXXX;x+;;++xxxx++;;;;+++X&&&&&&&&$&&&&++X;$$xXXXx:;+x$&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&$$$;:+:XXXX+++;;+++x++++;;;;++X&&&&&&&&&&&&xxx;XXxXXXx:;+$$$$&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&$$$+:+.xXXXx+x;;+++++++;;;;+;X&&&&&&&&&&&;X+:XxXXXX+:;X$$$$$&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&$$$x:+:+XXXx;+;;;++++++;;;+;X&&&&&&&&&$+$+;$xXXXX;:+X$$$$$$&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&$$$X::;;xXXX++;;;+++++;;;+;X&&&&&&&&XX&++XxXXXX::+$$$$$$$$&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&$$$$+:;:+xXXx++;;;++++++++X&&&&&&&x&&;xXX$XX+.;x$$$$$$$&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&$$$X:;:;xXXX;+;;;;++++++X&&&&&&$&$+XxX$$X;:;X$$$$&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&$$$$+:;:xXXX++;;;;+++++X&&&&&&&&xxX$$$x::x$$$$&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&$$$X:;:+XXXx+;;;;++++X&&&&&&&Xx$$$X;:+X$$&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&$$$$+:;:+XXXx+;;;+++X&&&&&$x$&$$+:;x$&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&$$&&$;:+:xXXX+;;+++X&&&&xx&&&x:++$&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&X:;;:XX$X+;++X&&Xx&&&X:;;X&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&X:;++X$$x;+X$+$&&$;+;X&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&x:;;x$$$;+$&&&;;;+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&x:++X$&&&$+;++$&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&+:+xXX;;++$&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&$;;xX$;$&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&X;:+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-^0]])
-    
-    sm_print("Light Blue", "Authenticating with server...")
-    repeat
-
-        
-        Citizen.Wait(1000)
-
-
-    SetConvar("Anti Cheat", "SecureServe-ac.com")
-    SetConvarServerInfo("Anti Cheat", "SecureServe-ac.com")
-    SetConvarReplicated("Anti Cheat", "SecureServe-ac.com")
-
-    --> [Modules] <--
-    initialize_misc_module()
-
-    --> [Protections] <--
-    initialize_server_protections_anti_resource()
-    initialize_server_protections_play_sound()
-    initialize_protections_explosions()
-    initialize_protections_entity_spam()
-    initialize_protections_damage()
-    initialize_protections_entity_lockdown()
-    initialize_protections_ptfx()
-
+    while true do
+        Citizen.Wait(1000) -- Check every second
+        TriggerServerEvent('playerLoaded')
+        break
+    end
 end)
-
-local function replaceEventRegistrations(filePath)
-    local file = io.open(filePath, "r")
-    if not file then
-        -- print("Could not open file: " .. filePath)
-        return
-    end
-
-    local content = file:read("*all")
-    file:close()
-
-    local netEventPattern = "RegisterNetEvent%s*%('([^']+)'%s*%)%s*AddEventHandler%s*%('%1'%s*,%s*function%(([^)]*)%)"
-    content = content:gsub(netEventPattern, "RegisterNetEvent('%1', function(%2)")
-
-    local serverEventPattern = "RegisterServerEvent%s*%('([^']+)'%s*%)%s*AddEventHandler%s*%('%1'%s*,%s*function%(([^)]*)%)"
-    content = content:gsub(serverEventPattern, "RegisterNetEvent('%1', function(%2)")
-
-    local outputFile = io.open(filePath, "w")
-    if not outputFile then
-        -- print("Could not open file for writing: " .. filePath)
-        return
-    end
-
-    outputFile:write(content)
-    outputFile:close()
-    -- print("Updated file: " .. filePath)
-end
-
-local function fileContainsLine(filePath, lineToFind)
-    local file = io.open(filePath, "r")
-    if not file then
-        -- print("Could not open file: " .. filePath)
-        return false
-    end
-
-    for line in file:lines() do
-        if line:match(lineToFind) then
-            file:close()
-            return true
-        end
-    end
-
-    file:close()
-    return false
-end
-
-Citizen.CreateThread(function ()
-    local function executePythonFile()
-        local command = 'app.py'
-    
-        os.execute(command)
-    end
-
-    executePythonFile()
-end)
-
-
-local function searchInDirectory(directory, resourceName)
-    local findCommand
-    if os.getenv("OS") == "Windows_NT" then
-        findCommand = 'dir /s /b "' .. directory .. '\\*.lua"'
-    else
-        findCommand = 'find "' .. directory .. '" -type f -name "*.lua"'
-    end
-
-    local p = io.popen(findCommand)
-    if not p then
-        -- print("Could not open directory: " .. directory)
-        return
-    end
-
-
-    
-    -- for file in p:lines() do
-    --     -- replaceEventRegistrations(file)
-
-    --     if fileContainsLine(file, "CreateObject") or fileContainsLine(file, "CreateVehicle") or
-    --        fileContainsLine(file, "CreatePed") or fileContainsLine(file, "CreatePedInsideVehicle") or
-    --        fileContainsLine(file, "CreateRandomPed") or fileContainsLine(file, "CreateRandomPedAsDriver") then
-    --         -- print("Whitelisted resource with entity creation: " .. resourceName)
-    --         table.insert(SecureServe.EntitySecurity, {resource = resourceName, whitelist = true})
-    --     end
-    -- end
-
-    p:close()
-end
-
-function SearchForAssetPackDependency()
-    SecureServe.EntitySecurity = SecureServe.EntitySecurity or {}
-
-    local resources = GetNumResources()
-    for i = 0, resources - 1 do
-        local resourceName = GetResourceByFindIndex(i)
-        local resourcePath = GetResourcePath(resourceName)
-        if not resourcePath then
-            -- print("Could not find resource path for: " .. resourceName)
-            goto continue
-        end
-
-        local fxManifestPath = resourcePath .. "/fxmanifest.lua"
-        local resourceLuaPath = resourcePath .. "/__resource.lua"
-
-        if fileContainsLine(fxManifestPath, "dependency '/assetpacks'") or fileContainsLine(resourceLuaPath, "dependency '/assetpacks'") then
-            -- print("Whitelisted encrypted resource: " .. resourceName)
-            -- table.insert(SecureServe.EntitySecurity, {resource = resourceName, whitelist = true})
-        end
-
-        -- Search all Lua files in the resource directory and its subdirectories
-        searchInDirectory(resourcePath, resourceName)
-
-        ::continue::
-    end
-end
-
-SearchForAssetPackDependency()
-
-
-exports('isResourceWhitelistedServer', function(resourceName)
-    for _, resource in ipairs(SecureServe.EntitySecurity) do
-        if resource.resource == resourceName and resource.whitelist then
-            return true
-        end
-    end
-    return false
-end)
-

@@ -1,3 +1,53 @@
+local alive = {}
+local allowedStop = {}
+local failureCount = {}
+
+-- Configuration
+local checkInterval = 5000  -- Time between each check cycle (15 seconds)
+local maxFailures = 40     -- Number of consecutive failures before dropping the player
+
+Citizen.CreateThread(LPH_NO_VIRTUALIZE(function()
+    while true do
+        local players = GetPlayers()
+        for _, playerId in ipairs(players) do
+            alive[tonumber(playerId)] = false
+            TriggerClientEvent('checkalive', tonumber(playerId))
+        end
+
+        Wait(checkInterval)
+
+        for _, playerId in ipairs(players) do
+            if not alive[tonumber(playerId)] and allowedStop[tonumber(playerId)] then
+                failureCount[tonumber(playerId)] = (failureCount[tonumber(playerId)] or 0) + 1
+                if failureCount[tonumber(playerId)] >= maxFailures then
+                    punish_player(tonumber(playerId), 'You have been dropped for not responding to the server.', webhook, time)
+                end
+            else
+                failureCount[tonumber(playerId)] = 0
+            end
+        end
+    end
+end))
+
+RegisterNetEvent('addalive', LPH_NO_VIRTUALIZE(function()
+    local src = source
+    alive[tonumber(src)] = true
+end))
+
+RegisterNetEvent('allowedStop', LPH_NO_VIRTUALIZE(function()
+    local src = source
+    allowedStop[src] = true
+end))
+
+AddEventHandler('playerDropped', function()
+    local src = source
+    alive[src] = nil
+    allowedStop[src] = nil
+    failureCount[src] = nil
+end)
+
+
+
 local playerHeartbeats = {}
 
 local function onPlayerDisconnected()
@@ -32,3 +82,6 @@ Citizen.CreateThread(LPH_JIT_MAX(function()
         end
     end
 end))
+
+
+
